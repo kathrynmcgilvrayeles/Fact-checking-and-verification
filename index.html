@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Curved Timeline — Tighter Spacing & Corrected Copy</title>
+  <title>Curved Timeline — Compact Layout</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,14 +11,14 @@
   <style>
     :root{ --pink:#e72582; --grey:#abb5bf; --blue:#1f2a52; --teal:#00bec7; --lt:#d2f0f0; --navy:#2e4d6b; }
     html,body{scroll-behavior:smooth;background:#f7f9fb; font-size:14px;}
-    body{font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial; font-size:14px;}
+    body{font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial;}
 
     .spine{position:fixed; left:50vw; top:0; width:6px; height:100vh; transform:translateX(-50%); background:var(--navy); border-radius:999px; z-index:0;}
 
-    section.step{min-height:40vh; display:flex; align-items:center; position:relative; padding:20px 0; scroll-margin-top:88px;}
+    section.step{min-height:35vh; display:flex; align-items:center; position:relative; padding:12px 0; scroll-margin-top:88px;}
     section.step + section.step{margin-top:-60px;}
 
-    .card{background:#fff; border-radius:14px; box-shadow:0 6px 18px rgba(2,40,60,.08); display:grid; grid-template-columns:220px minmax(0,1fr); gap:12px; padding:12px; max-width:560px; z-index:1; font-size:14px;}
+    .card{background:#fff; border-radius:14px; box-shadow:0 6px 18px rgba(2,40,60,.08); display:grid; grid-template-columns:220px minmax(0,1fr); gap:12px; padding:12px; max-width:560px; z-index:1;}
     .card img{width:220px; height:220px; object-fit:cover; border-radius:12px;}
     .card h2{color:var(--blue); font-weight:700; font-size:1rem; margin-bottom:0.25rem;}
     .card p{color:#29465b; font-size:14px;}
@@ -121,10 +121,10 @@
         const endY = (rectCard.top - rectStep.top) + rectCard.height/2;
 
         const midY = (startY + endY)/2;
-        const bulge = 72;
+        const bulge = 60;
         const dir = side === 'right' ? 1 : -1;
-        const c1x = startX;              const c1y = midY - 36;
-        const c2x = startX + dir*bulge;  const c2y = midY + 36;
+        const c1x = startX;              const c1y = midY - 30;
+        const c2x = startX + dir*bulge;  const c2y = midY + 30;
 
         const d = `M ${startX} ${startY} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${endX} ${endY}`;
         path.setAttribute('d', d);
