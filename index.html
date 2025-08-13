@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Curved Timeline — Tighter Spacing & Corrected Copy</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{ --pink:#e72582; --grey:#abb5bf; --blue:#1f2a52; --teal:#00bec7; --lt:#d2f0f0; --navy:#2e4d6b; }
+    html,body{scroll-behavior:smooth;background:#f7f9fb; font-size:14px;}
+    body{font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial;}
+
+    .spine{position:fixed; left:50vw; top:0; width:6px; height:100vh; transform:translateX(-50%); background:var(--navy); border-radius:999px; z-index:0;}
+
+    section.step{min-height:44vh; display:flex; align-items:center; position:relative; padding:24px 0; scroll-margin-top:88px;}
+    section.step + section.step{margin-top:-80px;}
+
+    .card{background:#fff; border-radius:14px; box-shadow:0 6px 18px rgba(2,40,60,.08); display:grid; grid-template-columns:220px minmax(0,1fr); gap:12px; padding:12px; max-width:560px; z-index:1;}
+    .card img{width:220px; height:220px; object-fit:cover; border-radius:12px;}
+    .card h2{color:var(--blue); font-weight:700; font-size:1rem; margin-bottom:0.25rem;}
+    .card p{color:#29465b; font-size:14px;}
+
+    .align-right{justify-content:flex-end;}
+    .align-left{justify-content:flex-start;}
+
+    svg.connector{position:absolute; inset:0; pointer-events:none; z-index:0; overflow:visible;}
+    .stroke{stroke:var(--navy); stroke-width:4; fill:none; stroke-linecap:round;}
+
+    .next-btn{position:absolute; right:10px; bottom:10px; width:28px; height:28px; border-radius:50%; background:var(--navy); color:#fff; display:grid; place-items:center; font-size:0.85rem; box-shadow:0 4px 10px rgba(0,0,0,.15);} 
+    .next-btn:hover{background:var(--teal);} 
+    .pager{position:fixed; left:50%; transform:translateX(-50%); bottom:10px; display:flex; gap:6px; z-index:50;}
+    .pager button{width:28px; height:28px; border-radius:50%; background:var(--navy); color:#fff; font-weight:700; font-size:0.8rem; border:2px solid #fff; box-shadow:0 4px 8px rgba(0,0,0,.12);} 
+    .pager button[aria-current="true"]{background:var(--teal); color:#0b2239;}
+
+    @media (max-width:700px){
+      .card{grid-template-columns:1fr; justify-items:center;}
+      .card img{width:200px; height:200px;}
+    }
+  </style>
+</head>
+<body>
+  <div class="spine" aria-hidden="true"></div>
+
+  <!-- STEP 1 RIGHT -->
+  <section id="step-1" class="step align-right" data-side="right">
+    <svg class="connector"><path class="stroke"/></svg>
+    <div class="card relative mr-[min(5vw,30px)]">
+      <img src="images/Assume-Nothing.jpg" alt="Assume Nothing">
+      <div class="pr-8">
+        <h2>Assume Nothing</h2>
+        <p>Treat all factual claims made by an AI as unverified until proven otherwise.</p>
+      </div>
+      <button class="next-btn" data-next="#step-2">➜</button>
+    </div>
+  </section>
+
+  <!-- STEP 2 LEFT -->
+  <section id="step-2" class="step align-left" data-side="left">
+    <svg class="connector"><path class="stroke"/></svg>
+    <div class="card relative ml-[min(5vw,30px)]">
+      <img src="images/Multiple-Sources.jpg" alt="Multiple Sources">
+      <div class="pr-8">
+        <h2>Multiple Sources</h2>
+        <p>Do not rely on a single source, even if the AI cites one. Cross-reference information across several reputable and independent sources.</p>
+      </div>
+      <button class="next-btn" data-next="#step-3">➜</button>
+    </div>
+  </section>
+
+  <!-- STEP 3 RIGHT -->
+  <section id="step-3" class="step align-right" data-side="right">
+    <svg class="connector"><path class="stroke"/></svg>
+    <div class="card relative mr-[min(5vw,30px)]">
+      <img src="images/Primary-Sources.jpg" alt="Primary Sources">
+      <div class="pr-8">
+        <h2>Primary Sources</h2>
+        <p>Prioritise primary sources (original research papers, artefacts, assets, government reports, official statistics) over secondary sources (news articles summarising research, blog posts).</p>
+      </div>
+      <button class="next-btn" data-next="#step-4">➜</button>
+    </div>
+  </section>
+
+  <!-- STEP 4 LEFT -->
+  <section id="step-4" class="step align-left" data-side="left">
+    <svg class="connector"><path class="stroke"/></svg>
+    <div class="card relative ml-[min(5vw,30px)]">
+      <img src="images/Check-Data.jpg" alt="Check Data">
+      <div class="pr-8">
+        <h2>Check Data</h2>
+        <p>Verify the recency of information. AI's knowledge cut-off might be several months or years old.</p>
+      </div>
+      <a class="next-btn" href="#step-1">⟲</a>
+    </div>
+  </section>
+
+  <nav class="pager" id="pager"></nav>
+
+  <script>
+    const STEPS = Array.from(document.querySelectorAll('section.step'));
+    const CENTER_X = () => window.innerWidth/2;
+
+    function drawConnectors(){
+      STEPS.forEach(step => {
+        const svg = step.querySelector('svg.connector');
+        const path = svg.querySelector('path');
+        const card = step.querySelector('.card');
+        const rectStep = step.getBoundingClientRect();
+        const rectCard = card.getBoundingClientRect();
+
+        svg.setAttribute('viewBox', `0 0 ${rectStep.width} ${rectStep.height}`);
+        svg.setAttribute('width', rectStep.width);
+        svg.setAttribute('height', rectStep.height);
+
+        const startX = CENTER_X() - rectStep.left;
+        const startY = 6;
+        const side = step.dataset.side === 'left' ? 'left' : 'right';
+        const endX = (side === 'right') ? rectCard.left - rectStep.left : rectCard.right - rectStep.left;
+        const endY = (rectCard.top - rectStep.top) + rectCard.height/2;
+
+        const midY = (startY + endY)/2;
+        const bulge = 72;
+        const dir = side === 'right' ? 1 : -1;
+        const c1x = startX;              const c1y = midY - 36;
+        const c2x = startX + dir*bulge;  const c2y = midY + 36;
+
+        const d = `M ${startX} ${startY} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${endX} ${endY}`;
+        path.setAttribute('d', d);
+      });
+    }
+
+    window.addEventListener('resize', drawConnectors);
+    window.addEventListener('scroll', drawConnectors, {passive:true});
+    window.addEventListener('load', drawConnectors);
+
+    const pager = document.getElementById('pager');
+    STEPS.forEach((s,i)=>{
+      const b = document.createElement('button');
+      b.type='button'; b.textContent = i+1;
+      b.addEventListener('click', ()=> s.scrollIntoView({behavior:'smooth', block:'center'}));
+      pager.appendChild(b);
+    });
+
+    const observer = new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          const idx = STEPS.indexOf(entry.target);
+          pager.querySelectorAll('button').forEach((b,i)=> b.setAttribute('aria-current', i===idx));
+        }
+      });
+    }, {threshold:0.6});
+    STEPS.forEach(s=>observer.observe(s));
+
+    document.querySelectorAll('.next-btn').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const next = btn.getAttribute('data-next');
+        if(next){ document.querySelector(next).scrollIntoView({behavior:'smooth', block:'center'}); }
+      });
+    });
+  </script>
+</body>
+</html>
